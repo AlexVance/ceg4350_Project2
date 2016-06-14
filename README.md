@@ -1,4 +1,5 @@
 # ceg4350_Project2
+
 Project 2: Paging Algorithms
 
 For this project you are to implement several page replacement algorithms: FIFO, Optimal, LRU, LFU, and MFU. Again, you must program in C for Linux. Your program will take several items as parameters: The first is the number of frames, and the second is a series (a string if you will) of integers representing the page references made by some fictional process. Assume that pages are accessed in left-to-right order by the fictional process.
@@ -16,7 +17,11 @@ Your program will be called as follows:
 
 ./lastname 3 0 1 5 5 5 0 2 3 4 1 1 9 9 10 0 2 1
 
-In the above example, the number of frames is three and eight pages are referenced (pages 0 through 5, 9 and 10).
+In the above example, the first number (3) represents the number of frames that will be used in the program.
+
+The subsequent numbers are the numbers that represent each of the page references. There are eight total pages that are referenced (pages 0 through 5, page 9 and page 10).
+
+The important thing is the order in which they are referenced. This will determine which pages get paged out and which ones stay paged into memory, for that given number of frames you have available.
 
 - You will be graded on how well each of the algorithms performs. Your program should be robust enough to handle incorrect or spurious input.
 - Do not require the user to input any data while your program runs (such as to choose the algorithm). Instead, the user simply runs the program with an arbitrary string representing the number of frames and the page references, and your program should run each of the algorithms in turn and output the results of each.
