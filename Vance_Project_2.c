@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int fifo(int num_frames, int * page_refs, int page_refs_size){
+void fifo(int num_frames, int * page_refs, int page_refs_size){
 
 int page_faults = 0;
 int frames[num_frames];
@@ -35,16 +35,12 @@ for (i = 0; i < num_frames; i++){
   frames[i] = -1;
 }
 
-printf("Number of Pages: %d\n", num_pages);
-printf("Number of Frames: %d\n", num_frames);
-printf("# values entered: %d\n", page_refs_size);
-
-printf("\n Displaying Distribution-----------\n");
+printf("\n FIFO output:\n");
 for(i = 0; i < num_pages; i++){
     k = 0;
 
     for (j = 0; j < num_frames; j++){
-      if(page_refs[i] == frames[i]){
+      if(page_refs[i] == frames[j]){
         k++;
         page_faults--;
       }
@@ -67,8 +63,7 @@ for(i = 0; i < num_pages; i++){
 }
 
 //show total page faults
-printf("\nTotal Page Faults %d\n", page_faults);
-return 0;
+printf("\nTotal Page Faults: %d\n", page_faults);
 }//end fifo
 
 void optimal(int num_frames, char page_refs){
