@@ -12,23 +12,8 @@ void fifo(int num_frames, int * page_refs, int page_refs_size){
 
 int page_faults = 0;
 int frames[num_frames];
-int num_pages = 0;
+int num_pages = getPageCount(page_refs, page_refs_size);
 int k, i, j;
-
-//count page numbers 
-for (i = 0; i < page_refs_size; i++){
-
-  //loop through temp_count and check values
-  for (j = 0; j < i; j++){
-    if(page_refs[i] == page_refs[j]){
-      break;
-    }
-  }
-  //there weren't any matches,
-  if(i == j){
-    num_pages++;
-  }
-}
 
 //gather frames into array
 for (i = 0; i < num_frames; i++){
@@ -68,6 +53,42 @@ printf("\nTotal Page Faults: %d\n", page_faults);
 
 void optimal(int num_frames, char page_refs){
 
+int page_faults = 0;
+int frames[num_frames];
+int check_frame[num_frames];
+int num_pages = getPageCount(page_refs, page_refs_size);
+int k, i, j, flag;
+
+//gather frames into array
+for (i = 0; i < num_frames; i++){
+  frames[i] = -1;
+  check_frame[i] = 0;
+}
+
+k = 0;
+while(k < num_pages){
+  j = 0;
+  flag = 0;
+  while(j < num_frames){
+    //check if page is already in frame
+    if(page_refs[i] == frame[j]){
+      flag = 1;
+    }
+    j++;
+  }
+}
+j = 0;
+
+    printf("\n\t***********************************\n");
+    for (j = 0; j < num_frames; j++)
+    {
+      printf("\t");
+      printf("(%d)\t", frames[j]);
+    }
+
+//show total page faults
+printf("\nTotal Page Faults: %d\n", page_faults);
+
 }
 
 void lru(int num_frames, char page_refs){
@@ -76,6 +97,28 @@ void lru(int num_frames, char page_refs){
 
 void lfu(int num_frames, char page_refs){
 
+}
+
+//Calculate page count (uniques) in user entry
+int getPageCount(int * page_refs, int page_refs_size){
+
+int num_pages = 0;
+
+    //count page numbers 
+  for (i = 0; i < page_refs_size; i++){
+
+    //loop through temp_count and check values
+    for (j = 0; j < i; j++){
+      if(page_refs[i] == page_refs[j]){
+        break;
+      }
+    }
+    //there weren't any matches,
+    if(i == j){
+      num_pages++;
+    }
+  }
+  return num_pages;
 }
 
 int main(int argc, char *argv[]) {
