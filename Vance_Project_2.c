@@ -8,6 +8,28 @@
 #include <stdlib.h>
 #include <string.h>
 
+//Calculate page count (uniques) in user entry
+int getPageCount(int * page_refs, int page_refs_size){
+
+int num_pages = 0;
+int i, j;
+    //count page numbers 
+  for (i = 0; i < page_refs_size; i++){
+
+    //loop through temp_count and check values
+    for (j = 0; j < i; j++){
+      if(page_refs[i] == page_refs[j]){
+        break;
+      }
+    }
+    //there weren't any matches,
+    if(i == j){
+      num_pages++;
+    }
+  }
+  return num_pages;
+}
+
 void fifo(int num_frames, int * page_refs, int page_refs_size){
 
 int page_faults = 0;
@@ -51,7 +73,7 @@ for(i = 0; i < num_pages; i++){
 printf("\nTotal Page Faults: %d\n", page_faults);
 }//end fifo
 
-void optimal(int num_frames, char page_refs){
+void optimal(int num_frames, int * page_refs, int page_refs_size){
 
 int page_faults = 0;
 int frames[num_frames];
@@ -71,7 +93,7 @@ while(k < num_pages){
   flag = 0;
   while(j < num_frames){
     //check if page is already in frame
-    if(page_refs[i] == frame[j]){
+    if(page_refs[k] == frames[j]){
       flag = 1;
     }
     j++;
@@ -79,12 +101,49 @@ while(k < num_pages){
 }
 j = 0;
 
-    printf("\n\t***********************************\n");
-    for (j = 0; j < num_frames; j++)
-    {
-      printf("\t");
-      printf("(%d)\t", frames[j]);
+if(flag == 0){
+  if(k >= num_frames){
+    int max = 0;
+    int x = 0;
+    while(x < num_frames){
+      int d = 0;
+      int l = k + 1;
+      while(l < num_pages){
+        //calculating distances of pages in frame 
+        //to their next occurence
+        if(frames[x] != page_refs[l]){
+          d++;
+        } else{
+          break;
+        }
+        l++;
+      }
+      //store distance
+      check_frame[x] = d;
+      x++;
     }
+    x = 0;
+    while(x < num_frames - 1){
+      //find max distance
+      if(check_frame[max] < check_frame[max + 1]){
+        max = x + 1;
+        x++;
+      }
+      frames[max] = page_refs[i];
+    }
+    else{
+      frames[i % num_frames] = page_refs[i];
+    }
+    //increment page fault
+    page_faults++;
+
+    while(j < num_frames){
+      printf("\t %d", frames[j]);
+      j++;
+    }
+  }
+  k++;
+}
 
 //show total page faults
 printf("\nTotal Page Faults: %d\n", page_faults);
@@ -97,28 +156,6 @@ void lru(int num_frames, char page_refs){
 
 void lfu(int num_frames, char page_refs){
 
-}
-
-//Calculate page count (uniques) in user entry
-int getPageCount(int * page_refs, int page_refs_size){
-
-int num_pages = 0;
-
-    //count page numbers 
-  for (i = 0; i < page_refs_size; i++){
-
-    //loop through temp_count and check values
-    for (j = 0; j < i; j++){
-      if(page_refs[i] == page_refs[j]){
-        break;
-      }
-    }
-    //there weren't any matches,
-    if(i == j){
-      num_pages++;
-    }
-  }
-  return num_pages;
 }
 
 int main(int argc, char *argv[]) {
@@ -141,8 +178,8 @@ int main(int argc, char *argv[]) {
     page_refs_size = (sizeof(page_refs)/ sizeof(page_refs[0]))-1;
   }
 
-  fifo(num_frames, page_refs, page_refs_size);
-  //optimal(num_frames, page_refs);
+  //fifo(num_frames, page_refs, page_refs_size);
+  optimal(num_frames, page_refs, page_refs_size);
   //lru(num_frames, page_refs); 
   //lfu(num_frames, page_refs);
   return 0;
