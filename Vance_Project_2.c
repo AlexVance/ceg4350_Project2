@@ -130,6 +130,7 @@ for(j=0;j<num_frames;j++){
             printf("\nTotal number of faults=%d",page_faults);
 }
 
+//older code in here v
 //
 //
 //   j = 0;
@@ -204,8 +205,8 @@ void lru(int num_frames, int * page_refs, int page_refs_size){
 
 int frames[num_frames];
 int check_frame[num_frames];
-int num_pages = getPageCount(page_refs, page_refs_size);
-int k, i, j, flag, page_faults = 0;
+int num_pages = page_refs_size;//getPageCount(page_refs, page_refs_size);
+int k, i, j, h,x,flag1=0,flag2=0, page_faults = 0, index;
 
 //gather frames into array
 for (i = 0; i < num_frames; i++){
@@ -217,46 +218,51 @@ i = 0;
 
 printf("\n LRU output:\n");
 
-while(i < num_pages){
-  j = 0;
-  flag = 0;
-  while(j < num_frames){
-    //check if page exists in frame already
-    if(page_refs[i] == frames[j]){
-      flag = 1;
-      check_frame[j] = i + 1;
+for (j = 0; j < page_refs_size; j++){
+    for (i = 0; i < num_frames; i++) {
+      if(frames[i] == page_refs[j]){
+        flag1 = 1;
+        flag2 = 2;
+        break;
+      }
     }
-    j++;
-  }
-    j = 0;
-    //
-    if(flag = 0){
-        int min = 0;
-        k = 0;
-        while(k < num_frames - 1){
-          //calculate page that is least recently used
-          if(check_frame[min] > check_frame[k + 1])
-            min = k + 1;
-            k++;
+    if(flag1 == 0){
+      for (i = 0; i < num_frames; i++) {
+        if(frames[i] == -1){
+          frames[i] = page_refs[j];
+          flag2 = 1;
+          break;
         }
-        frames[min] = page_refs[i];//replace it
-        check_frame[min] = i + 1;//increase the time
-        page_faults++;//count page fault
-
-        while(j < num_frames){
-          printf("\t %d", frames[j]);
-          j++;
+      }
+    }
+    if(flag2 == 0){
+      for (i = 0; i < num_frames; i++){
+        check_frame[i] = 0;
+        for (h = 1; h < num_frames-1; h++) {
+          x = j - 1;
+          for (k = 0; k < num_frames; k++) {
+            if(frames[k] == page_refs[x]){
+              check_frame[k] = 1;
+            }
+          }
+          x--;
         }
+        for (i = 0; i < num_frames; i++) {
+          if(check_frame[i] == 0){
+            index = i;
+          }
+        }
+        frames[index] = page_refs[j];
+        page_faults++;
+      }
     }
-    i++;
-
-    printf("\n\t***********************************\n");
-    for (j = 0; j < num_frames; j++)
-    {
-      printf("\t");
-      printf("(%d)\t", frames[j]);
-    }
+}
+//output
+  printf("\n");
+  for (i = 0; i < num_frames; i++) {
+    printf("\t%d", frames[i]);
   }
+
   //show total page faults
   printf("\nTotal Page Faults: %d\n", page_faults);
 }
@@ -291,8 +297,8 @@ int main(int argc, char *argv[]) {
   }
 
   //fifo(num_frames, page_refs, page_refs_size);
-  optimal(num_frames, page_refs, page_refs_size);
-  //lru(num_frames, page_refs, page_refs_size);
+  //optimal(num_frames, page_refs, page_refs_size);
+  lru(num_frames, page_refs, page_refs_size);
   //lfu(num_frames, page_refs, page_refs_size);
   //mfu(num_frames, page_refs, page_refs_size);
   return 0;
