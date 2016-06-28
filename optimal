@@ -1,0 +1,86 @@
+
+          for(i=0;i<nof;i++){
+          frame[i]=-1;  //Frame Array
+          fcount[i]=0;  // Track the next Availability of frames
+          }
+
+          i=0;
+          while(i<nop){
+          int j=0,flag=0;
+
+            while(j<nof){
+              // Check if page is already in frame
+               if(page[i]==frame[j]){
+               flag=1;
+               }
+33
+               j++;
+            }
+
+            j=0;  
+
+            cout<<"\n\t**************************************\n";
+            cout<<"\t"<<page[i]<<"-->";   
+
+            if(flag==0){
+40
+              if(i>=nof){
+42
+             int max=0,k=0;
+43
+             while(k<nof){
+45
+                int dist=0,j1=i+1;
+46
+                while(j1<nop){
+//Calculating Distances of pages that are in the frame to their next occurence
+                if(frame[k]!=page[j1])  
+                dist++;
+
+                else{
+                break;
+                }
+
+                j1++;
+
+                }
+
+               fcount[k]=dist; //Storing Distances into array
+              k++;  
+             }           
+59
+             k=0;
+60
+              while(k<nof-1){
+              //Finding out the maxximum distance
+                  if(fcount[max]<fcount[k+1]) 
+                    max=k+1;
+
+                  k++;
+                }
+
+               frame[max]=page[i];  
+             } else {
+
+                  frame[i%nof]=page[i];
+              }
+
+               count++;  // Increasing Page Fault.
+
+            while(j<nof){
+77
+               cout<<"\t|"<<frame[j]<<"|";
+78
+               j++;
+79
+            }
+          }
+82
+           i++; 
+          }
+85
+          cout<<"\n\t**************************************\n";
+          cout<<"\n\tPage Fault is:"<<count;
+          getch();
+          return 0;
+}       

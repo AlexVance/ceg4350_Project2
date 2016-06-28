@@ -1,77 +1,59 @@
+void optimal(){
+int check_frame[10],i,j,k,page_faults,num_frames,flag,temp,current,c,dist,max,m,cnt,p,x;
+page_faults=0;
+dist=0;
+k=0;
 
-#include<stdio.h>
+printf(“\nEnter frame size:”);
+scanf(“%d”,&num_frames);
 
+//initilizing distance and frame array
+for(i=0;i<num_frames;i++){
+check_frame[i]=0;
+frames[i]=-1;
+}
 
- int main()
+for(i=0;i<num_pages;i++){
+flag=0;
+temp=page_refs[i];
+   for(j=0;j<num_frames;j++){
+         if(temp==frames[j]){
+            flag=1;
+            break;
+         }
+      }
+      if((flag==0)&&(k<num_frames)){
+         page_faults++;
+         frames[k]=temp;
+         k++;
+      }else if((flag==0)&&(k==num_frames)){
+         page_faults++;
+         for(cnt=0;cnt<num_frames;cnt++){
+            current=frames[cnt];
+            for(c=i;c<num_pages;c++){
+               if(current!=page_refs[c])
+               check_frame[cnt]++;
+               else
+               break;
+            }
+         }
+         max=0;
+         for(m=0;m<num_frames;m++){
+            if(check_frame[m]>max){
+               max=check_frame[m];
+               p=m;
+            }
+         }
+         frames[p]=temp;
+      }
 
-   {
+printf(“\n”);
 
-      int a[10],count=0,i,j,k,n,m;
+   for(x=0;x<num_frames;x++){
+      printf(“%d\t”,frames[x]);
+   }
+}
 
-      printf("\n\tEnter No. of Pages:\n");
-
-      printf("\t");
-
-      scanf("%d",&n);
-
-      printf("\n\tEnter values of Reference String :\n");
-
-      for(i=0;i<n;i++)
-
-      {
-
-       printf("\t");              
-
-       scanf("%d",&a[i]);
-
-       }
-
-     printf("\n\tEnter no. of frames:\n");
-
-     {
-
-      printf("\t");
-
-     scanf("%d",&m);
-
-     }
-
-     int count1[m];
-
-     for(i=0;i<m;i++)
-
-       count1[i]=-1;
-
-     printf("\n Displaying Distribution-----------\n");
-
-     for(i=0;i<n;i++){
-            k=0;
-
-            for(j=0;j<m;j++){
-                if(a[i]==count1[j]){
-                     k++;
-                     count--;
-                  }   
-             }     
-
-             count++;
-
-             if(count<=m && k==0){
-                  count1[i]=a[i];
-                }else if(k==0){
-                   count1[(count-1)%m]=a[i];
-                }
-
-            printf("\n\t********************************\n"); 
-            for(j=0;j<m;j++){
-
-              printf("\t");       
-              printf("(%d)\t",count1[j]);
-              }
-      } 
-
-      printf("\n\n\tTotal Page Faults %d",count);
-      return 0;
-
-
-}     
+printf(“\nTotal number of faults=%d”,page_faults);
+}
+2,3,2,1,5,2,4,5,3,2,5,2
