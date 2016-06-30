@@ -211,18 +211,16 @@ int k, i, j, h,x,flag1=0,flag2=0, page_faults = 0, index;
 //gather frames into array
 for (i = 0; i < num_frames; i++){
   frames[i] = -1;
-  check_frame[i] = 0;
 }
-
-i = 0;
 
 printf("\n LRU output:\n");
 
 for (j = 0; j < page_refs_size; j++){
+  flag1=0,flag2=0;
     for (i = 0; i < num_frames; i++) {
       if(frames[i] == page_refs[j]){
         flag1 = 1;
-        flag2 = 2;
+        flag2 = 1;
         break;
       }
     }
@@ -236,32 +234,29 @@ for (j = 0; j < page_refs_size; j++){
       }
     }
     if(flag2 == 0){
-      for (i = 0; i < num_frames; i++){
+      for (i = 0; i < num_frames; i++)
         check_frame[i] = 0;
-        for (h = 1; h < num_frames-1; h++) {
-          x = j - 1;
+        for (x = j-1,h = 1; h < num_frames-1; h++,x--){
           for (k = 0; k < num_frames; k++) {
-            if(frames[k] == page_refs[x]){
+            if(frames[k] == page_refs[x])
               check_frame[k] = 1;
-            }
           }
-          x--;
         }
         for (i = 0; i < num_frames; i++) {
-          if(check_frame[i] == 0){
+          if(check_frame[i] == 0)
             index = i;
-          }
+
         }
         frames[index] = page_refs[j];
         page_faults++;
       }
-    }
+      //output
+        printf("\n");
+        for (i = 0; i < num_frames; i++) {
+          printf("\t%d", frames[i]);
+        }
 }
-//output
-  printf("\n");
-  for (i = 0; i < num_frames; i++) {
-    printf("\t%d", frames[i]);
-  }
+
 
   //show total page faults
   printf("\nTotal Page Faults: %d\n", page_faults);
